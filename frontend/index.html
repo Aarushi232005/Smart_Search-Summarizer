@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Search & Summarizer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+      backdrop-filter: blur(6.5px);
+      -webkit-backdrop-filter: blur(6.5px);
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #ff6e7f, #bfe9ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    input {
+      width: 75%;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 8px;
+      margin-right: 1rem;
+    }
+    button {
+      padding: 0.7rem 1.5rem;
+      background-color: #ff6e7f;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #ff758c;
+    }
+    .result-box {
+      background: #1c1c1c;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1.5rem;
+      text-align: left;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Smart Search & Summarizer</h1>
+    <div>
+      <input type="text" id="query" placeholder="Ask anything..." />
+      <button onclick="askQuery()">Search</button>
+    </div>
+    <div id="result" class="result-box" style="display:none;"></div>
+  </div>
+
+  <script>
+    async function askQuery() {
+      const query = document.getElementById('query').value;
+      const resultBox = document.getElementById('result');
+
+      resultBox.style.display = 'block';
+      resultBox.innerText = 'Thinking...';
+
+      try {
+        const response = await fetch('http://localhost:8000/ask', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ query })
+        });
+
+        const data = await response.json();
+        resultBox.innerText = data.result;
+      } catch (err) {
+        resultBox.innerText = 'Something went wrong!';
+      }
+    }
+  </script>
+</body>
+</html>
